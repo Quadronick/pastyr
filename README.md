@@ -1,0 +1,2 @@
+# pastyr
+CLI ticker app
