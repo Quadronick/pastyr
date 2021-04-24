@@ -50,10 +50,10 @@ def search_asset(config, asset_type, asset_id):
 def add_asset(data, asset_type, ticker, price, quant, curr):
     if search_asset(data, asset_type, ticker):
         element_number = len(data['assets'][asset_type][ticker])
-        data['assets'][asset_type][ticker].update({str(element_number + 1): {'price': price, 'quant': quant}})
+        data['assets'][asset_type][ticker].update({str(element_number): {'price': price, 'quant': quant}})
     else:
-        data['assets'][asset_type].update({ticker: {}, 'currency': curr})
-        data['assets'][asset_type][ticker].update({'1': {'price': price, 'quant': quant}})
+        data['assets'][asset_type].update({ticker: {}})
+        data['assets'][asset_type][ticker].update({'1': {'price': price, 'quant': quant}, 'currency': curr})
     add_to_config(data, 'w')
 
 
@@ -63,8 +63,8 @@ def init_config(api_key):
     """
     return {'assets': { 'stocks': {} }, 'api': api_key}
 
-structure = read_from_config()
-
+if not args.init:
+    structure = read_from_config()
 if args.init:
     add_to_config(init_config(args.init), 'w')
 if args.buy:
