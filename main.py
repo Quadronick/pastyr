@@ -18,11 +18,17 @@ args = parser.parse_args()
 
 
 def add_to_config(deal_info, flag='a'):
+    """
+       Add record into the configuration file.
+    """
     with open('config.json', flag) as json_file:
         json.dump(deal_info, json_file)
 
 
 def read_from_config():
+    """
+        Read structure from configuration file.
+    """
     with open('config.json') as json_file:
         return json.load(json_file)
 
@@ -37,17 +43,25 @@ def search_symbol(symbol, api_key):
 
 
 def get_current_price(symbol, api_key):
-    """Get current stock price"""
+    """
+       Get current stock price
+    """
     output = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='
                           + symbol + '&apikey=' + api_key)
     return output.json()['Global Quote']['05. price']
 
 
 def search_asset(config, asset_type, asset_id):
+    """
+       Search if asset is already presented in configuration file.
+    """
     return bool(asset_id in config['assets'][asset_type])
 
 
 def add_asset(data, asset_type, ticker, price, quant, curr):
+    """
+       Add asset into the configuration file.
+    """
     if search_asset(data, asset_type, ticker):
         element_number = len(data['assets'][asset_type][ticker])
         price = float(data['assets'][asset_type][ticker][str(element_number - 1)]['value']) + float(quant) * float(price)
@@ -64,6 +78,7 @@ def init_config(api_key):
        Initialize clean configuration file. API key required
     """
     return {'assets': { 'stocks': {} }, 'api': api_key}
+
 
 if not args.init:
     structure = read_from_config()
