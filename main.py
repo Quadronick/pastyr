@@ -50,10 +50,12 @@ def search_asset(config, asset_type, asset_id):
 def add_asset(data, asset_type, ticker, price, quant, curr):
     if search_asset(data, asset_type, ticker):
         element_number = len(data['assets'][asset_type][ticker])
-        data['assets'][asset_type][ticker].update({str(element_number): {'price': price, 'quant': quant}})
+        price = float(data['assets'][asset_type][ticker][str(element_number - 1)]['value']) + float(quant) * float(price)
+        quant = float(data['assets'][asset_type][ticker][str(element_number - 1)]['quant']) + float(quant)
+        data['assets'][asset_type][ticker].update({str(element_number): {'value': price, 'quant': quant}})
     else:
         data['assets'][asset_type].update({ticker: {}})
-        data['assets'][asset_type][ticker].update({'1': {'price': price, 'quant': quant}, 'currency': curr})
+        data['assets'][asset_type][ticker].update({'1': {'value': str(float(price) * float(quant)), 'quant': quant}, 'currency': curr})
     add_to_config(data, 'w')
 
 
